@@ -1,0 +1,66 @@
+<?php
+$q = $_REQUEST["w"];
+
+$obj = json_decode($_GET["w"], false);//jason file get decode into an object in the PHP
+//ECHO $obj->table1;
+$conn = mysqli_connect("localhost","root","","games&movies");
+
+// Check connection
+$iteams=0;
+$movie="movie";
+$movie_info="movie_info";
+if (!$conn) {
+    die('Could not connect: ' . mysqli_error($con));
+}
+//echo "Connected successfully";
+$sql= "select m.movie_id,p_name,actor,actress,director,duration,Year_released,awards,rating,rent_price,buy_price,image_src from $obj->table1 p,$obj->table2 m,$obj->table3 a1,$obj->table4 a2 where p.p_id=m.movie_id and m.movie_id=a1.movie_id and m.movie_id=a2.movie_id ";
+$result = mysqli_query($conn,$sql);
+if (mysqli_num_rows($result) > 0) {
+	//echo "query exceuted succesfully";
+	  echo "<table class='table table-responsive table-hover' style='font-size:15px;color:#337ab7;font-family: cursive;'><tr><th>Movie_id</th><th>P_Name</th><th>Actor</th><th>Actress</th><th>Director</th>
+		<th>Duration</th><th>Year_released</th><th>Awards</th><th>Rating</th><th>Rent_price</th><th>Buy_price</th><th>Buy</th><th>Rent</th></tr>";
+	 while($row = mysqli_fetch_assoc($result)) {
+echo "<tr id=".$movie.++$iteams."><td>".$row["movie_id"]."</td><td>".$row["p_name"]."</td><td>".$row["actor"].
+"</td><td>".$row["actress"]."</td><td>".$row["director"]."</td><td>".$row["duration"]."</td><td>".$row["Year_released"]."</td><td>"
+.$row["awards"]."</td><td>".$row["rating"]."</td><td>$".$row["rent_price"]."</td><td>$"
+		.$row["buy_price"]."</td>"."<td><a href='#' class='btn btn-primary'>Buy</a></td>"."<td><a href='#' class='btn btn-primary'>Rent</a></td>"."</tr>
+		
+		<tr id=".$movie_info.$iteams." style='display:none;'>
+			<td style='width:100%;margin;auto;'>
+			<div class='thumbnail'>
+					<img  src=".$row["image_src"] ." alt=".$row["p_name"]."style='width:100px;height:100px;'>
+				<div class='caption'>
+					<div>
+						<p>".
+						 "Movie Name: ".$row["p_name"]."<br>".
+						 "Movie actor: ".$row["actor"]."<br>".
+						 "Movie Name: ".$row["actress"]."<br>".
+						
+						."</p>
+					</div>
+				</div>
+			</div>
+			<td>
+		</tr>
+		<!--<script>
+			$(document).ready(function(){
+				console.log('hello');
+    $(".'"#'.$movie.$iteams.'"'.").click(function(){
+        $(".'"#'.$movie_info.$iteams.'"'.").slideToggle();
+    });
+});
+		</script>-->";
+
+	 }
+echo "</table>";
+}
+
+else
+{
+	    echo "0 results";
+
+}
+
+mysqli_close($conn);
+
+?>
